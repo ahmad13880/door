@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101827">
+    <title>Metro Control | نظام المترو</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <img src="metro-logo.png" class="brand-logo" alt="METRO CONTROL">
+    </div>
+
+    <nav class="main-nav">
+        <a href="#dashboard">الرئيسية</a>
+        <a href="#invoices">الفواتير</a>
+        <a href="#statistics">الإحصائيات</a>
+    </nav>
+
+    <div class="top-actions">
+        <span class="role-label">لوحة المحطة</span>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- ================================= -->
+    <!-- DASHBOARD -->
+    <!-- ================================= -->
+
+    <section id="dashboard" class="page-section">
+
+        <section class="welcome">
+            <div>
+                <h1>لوحة إدارة المحطة</h1>
+                <p>متابعة حالة المحطة وحركة الركاب</p>
+            </div>
+
+            <span class="live-indicator">
+                <span class="live-dot"></span>
+                لوحة المتابعة
+            </span>
+        </section>
+
+        <section class="stats-grid">
+
+            <article class="stat-card">
+                <div class="stat-icon">💰</div>
+                <p>الرصيد الحالي</p>
+                <h2 id="balanceValue">—</h2>
+                <small>ريال سعودي</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">👥</div>
+                <p>إجمالي الركاب</p>
+                <h2 id="passengerValue">—</h2>
+                <small>عدد عمليات الدخول</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">🎫</div>
+                <p>سعر التذكرة</p>
+                <h2>5</h2>
+                <small>ريال سعودي</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">⚙️</div>
+                <p>حالة النظام</p>
+                <h2 id="systemStatus">غير متصل</h2>
+                <small>اتصال Arduino</small>
+            </article>
+
+        </section>
+
+        <!-- ARDUINO CONNECTION -->
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>التحكم بالأردوينو</h2>
+                    <p>الاتصال بلوحة Arduino Uno عبر USB</p>
+                </div>
+                <span class="panel-icon">🔌</span>
+            </div>
+
+            <div class="actions">
+                <button id="connectButton" class="btn-primary">
+                    اتصال بالأردوينو
+                </button>
+
+                <button id="disconnectButton" class="btn-dark" disabled>
+                    قطع الاتصال
+                </button>
+            </div>
+
+            <p id="serialMessage" class="status-message">
+                لم يتم الاتصال بعد
+            </p>
+        </section>
+
+        <!-- STATION MANAGEMENT -->
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>إدارة المحطة</h2>
+                    <p>التحكم المباشر في نظام المترو</p>
+                </div>
+                <span class="panel-icon">🛠️</span>
+            </div>
+
+            <h3>البوابة</h3>
+
+            <div class="actions">
+                <button id="openGateButton" class="btn-primary" disabled>
+                    فتح البوابة
+                </button>
+
+                <button id="closeGateButton" class="btn-dark" disabled>
+                    إغلاق البوابة
+                </button>
+            </div>
+
+            <h3>التذاكر</h3>
+
+            <div class="actions">
+                <button id="sellTicketButton" class="btn-secondary" disabled>
+                    بيع تذكرة (5 ريال)
+                </button>
+            </div>
+
+            <h3>الرصيد</h3>
+
+            <div class="actions">
+                <button id="addBalanceButton" class="btn-secondary" disabled>
+                    إضافة رصيد
+                </button>
+
+                <button id="deductBalanceButton" class="btn-secondary" disabled>
+                    خصم رصيد
+                </button>
+            </div>
+
+            <h3>الصيانة</h3>
+
+            <div class="actions">
+                <button id="maintenanceButton" class="btn-secondary" disabled>
+                    تشغيل وضع الصيانة
+                </button>
+            </div>
+
+            <p id="controlMessage" class="notice">
+                اتصل بالأردوينو لتفعيل أدوات التحكم.
+            </p>
+        </section>
+
+        <!-- OPERATIONS LOG -->
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>سجل العمليات</h2>
+                    <p>آخر العمليات المسجلة في المحطة</p>
+                </div>
+                <span class="panel-icon">📋</span>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العملية</th>
+                            <th>التفاصيل</th>
+                            <th>الوقت</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="logsTable">
+                        <tr>
+                            <td colspan="3" class="empty-row">
+                                لا توجد بيانات بعد
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p id="dataMessage" class="data-message">
+            البيانات ستظهر بعد ربط النظام بالأردوينو.
+        </p>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- INVOICES PAGE -->
+    <!-- ================================= -->
+
+    <section id="invoices" class="page-section">
+
+        <section class="welcome">
+            <div>
+                <h1>فواتير التذاكر</h1>
+                <p>عرض جميع التذاكر الصادرة وطباعتها</p>
+            </div>
+
+            <span class="panel-icon">🧾</span>
+        </section>
+
+        <section class="panel">
+
+            <div class="panel-heading">
+                <div>
+                    <h2>قائمة الفواتير</h2>
+                    <p>الفواتير المحفوظة على هذا الجهاز والمتصفح</p>
+                </div>
+
+                <span class="panel-icon">🎫</span>
+            </div>
+
+            <div class="table-container">
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>نوع التذكرة</th>
+                            <th>المبلغ</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>حالة الدفع</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="invoicesTable">
+                        <tr>
+                            <td colspan="7" class="empty-row">
+                                لا توجد فواتير حتى الآن
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="notice">
+                يتم حفظ الفواتير تلقائياً في المتصفح بعد استقبال بياناتها من الأردوينو.
+            </p>
+
+        </section>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- STATISTICS PAGE -->
+    <!-- ================================= -->
+
+    <section id="statistics" class="page-section">
+
+        <section class="welcome">
+            <div>
+                <h1>إحصائيات المحطة</h1>
+                <p>ملخص حركة الركاب والعمليات المالية</p>
+            </div>
+
+            <span class="panel-icon">📊</span>
+        </section>
+
+        <section class="stats-grid advanced-stats">
+
+            <article class="stat-card">
+                <div class="stat-icon">🎫</div>
+                <p>إجمالي الفواتير</p>
+                <h2 id="invoiceCountValue">0</h2>
+                <small>فاتورة محفوظة</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">💵</div>
+                <p>إيرادات التذاكر</p>
+                <h2 id="revenueValue">0 ريال</h2>
+                <small>إجمالي قيمة الفواتير</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">🚫</div>
+                <p>الدخول المرفوض</p>
+                <h2 id="deniedValue">0</h2>
+                <small>عملية رفض مسجلة</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon">➕</div>
+                <p>عمليات الشحن</p>
+                <h2 id="rechargeValue">0</h2>
+                <small>عملية شحن مسجلة</small>
+            </article>
+
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>معلومات الإحصائيات</h2>
+                    <p>مصدر البيانات وطريقة احتسابها</p>
+                </div>
+
+                <span class="panel-icon">📈</span>
+            </div>
+
+            <div class="statistics-info">
+                <p>
+                    <strong>إيرادات التذاكر:</strong>
+                    مجموع مبالغ الفواتير المسجلة، بما فيها التذاكر المجانية بقيمة صفر.
+                </p>
+
+                <p>
+                    <strong>الدخول المرفوض:</strong>
+                    عدد عمليات الرفض التي وصلت إلى الموقع.
+                </p>
+
+                <p>
+                    <strong>عمليات الشحن:</strong>
+                    عدد عمليات إضافة الرصيد التي وصلت إلى الموقع.
+                </p>
+
+                <p>
+                    <strong>حفظ البيانات:</strong>
+                    يتم الاحتفاظ بالبيانات على المتصفح والجهاز نفسه.
+                </p>
+            </div>
+        </section>
+        
+    <section class="panel card-account-panel">
+        <h2>حساب البطاقة</h2>
+
+        <div id="cardLoginMessage" class="card-login-message">
+        مرر بطاقة RFID لعرض حسابها
+        </div>
+
+        <div id="cardAccount" class="card-account" hidden>
+            <div class="card-account-header">
+                <div>
+                <span class="muted">صاحب البطاقة</span>
+                <h3 id="cardOwnerName">---</h3>
+            </div>
+            <span id="cardTypeBadge" class="card-type-badge">---</span>
+        </div>
+
+        <div class="card-account-details">
+            <div>
+                <span>رقم البطاقة</span>
+                <strong id="cardCode">---</strong>
+            </div>
+
+            <div>
+                <span>UID</span>
+                <strong id="cardUID">---</strong>
+            </div>
+
+            <div>
+                <span>الرصيد المسجل</span>
+                <strong id="cardBalance">---</strong>
+            </div>
+
+            <div>
+                <span>الرحلات المتبقية</span>
+                <strong id="cardTrips">---</strong>
+            </div>
+
+            <div>
+                <span>نوع البطاقة</span>
+                <strong id="cardMode">---</strong>
+            </div>
+
+            <div>
+                <span>الصلاحية</span>
+                <strong id="cardExpiry">---</strong>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+</section>
+
+</main>
+
+<footer>
+    METRO CONTROL SYSTEM © 2026
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
